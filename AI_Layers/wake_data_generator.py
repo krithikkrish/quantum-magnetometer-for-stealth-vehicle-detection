@@ -32,7 +32,7 @@ FS    = 200e3          # sample rate [Hz] (must resolve the ~25 kHz carrier)
 WIN_S = 0.02           # window length [s] -> 4000 samples
 NWIN  = int(FS*WIN_S)
 B_FLOOR = 5*fT         # sensor noise floor (Phase 6 budget)
-ST    = 0.2            # Strouhal number (vortex shedding)
+ST    = 0.2            # Strouhal number (vortex shedding
 
 def dipole_B(m_eff, r):
     """On-axis magnetic dipole field magnitude [T] at range r [m]."""
@@ -94,7 +94,7 @@ def sample_params():
         alt   = rng.uniform(100, 5000),     # m
         cpa   = rng.uniform(500, 5000),     # m
         m_eff = 10**rng.uniform(2.5, 3.5),  # A.m^2 (assumption, swept)
-        # EDDY SCALE (mm), not wingspan -> puts the carrier in the kHz CPMG band
+        # EDDY SCALE (mm), not wingspan -> puts the carrier in the kHz CPMG band)
         L     = rng.uniform(0.0015, 0.005), # m  (1.5-5 mm eddies)
     )
 
