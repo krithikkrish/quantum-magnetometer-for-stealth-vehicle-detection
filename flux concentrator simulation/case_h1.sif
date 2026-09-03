@@ -1,0 +1,100 @@
+Header
+  Mesh DB "." "m1"
+  Results Directory "."
+End
+Simulation
+  Max Output Level = 4
+  Coordinate System = Cartesian 3D
+  Coordinate Scaling = 1.0e-3
+  Simulation Type = Steady state
+  Steady State Max Iterations = 1
+  Output Intervals = 1
+End
+Constants
+  Permeability of Vacuum = 1.2566370614e-6
+  Permittivity of Vacuum = 8.8541878128e-12
+End
+Body 1
+  Name = "ferrite"
+  Equation = 1
+  Material = 1
+End
+Body 2
+  Name = "air"
+  Equation = 1
+  Material = 2
+End
+Material 1
+  Name = "Ferrite"
+  Relative Permeability = 6500.0
+  Relative Permittivity = 1.0
+  Electric Conductivity = 0.0
+End
+Material 2
+  Name = "Air"
+  Relative Permeability = 1.0
+  Relative Permittivity = 1.0
+  Electric Conductivity = 0.0
+End
+Equation 1
+  Active Solvers(3) = 1 2 4
+End
+Solver 1
+  Equation = "MgDyn"
+  Procedure = "MagnetoDynamics" "WhitneyAVSolver"
+  Variable = "AV"
+  Use Tree Gauge = Logical True
+  Linear System Solver = Iterative
+  Linear System Iterative Method = CG
+  Linear System Preconditioning = ILU0
+  Linear System Max Iterations = 20000
+  Linear System Convergence Tolerance = 1.0e-7
+  Linear System Residual Output = 1000
+  Linear System Abort Not Converged = False
+  Nonlinear System Max Iterations = 1
+  Steady State Convergence Tolerance = 1.0e-6
+End
+Solver 2
+  Equation = "CalcFields"
+  Procedure = "MagnetoDynamics" "MagnetoDynamicsCalcFields"
+  Potential Variable = "AV"
+  Calculate Magnetic Field Strength = Logical True
+  Calculate Magnetic Flux Density = Logical True
+  Calculate Nodal Fields = Logical True
+  Calculate Elemental Fields = Logical True
+  Linear System Solver = Iterative
+  Linear System Iterative Method = CG
+  Linear System Preconditioning = ILU0
+  Linear System Max Iterations = 10000
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Abort Not Converged = False
+End
+Solver 3
+  Exec Solver = After Simulation
+  Equation = "SaveScalars"
+  Procedure = "SaveData" "SaveScalars"
+  Filename = "scalars_h1.dat"
+  Save Coordinates(1,3) = 0.0 0.0 0.0100215
+  Variable 1 = "Magnetic Flux Density 1"
+  Variable 2 = "Magnetic Flux Density 2"
+  Variable 3 = "Magnetic Flux Density 3"
+End
+Solver 4
+  Exec Solver = After Simulation
+  Equation = "ResultOutput"
+  Procedure = "ResultOutputSolve" "ResultOutputSolver"
+  Output File Name = "bowtie_field"
+  Vtu Format = Logical True
+  Save Geometry Ids = Logical True
+  Single Precision = Logical True
+End
+
+Boundary Condition 1
+  Name = "outer"
+  Target Boundaries(1) = 1
+  AV {e} 1 = Variable Coordinate 2
+    Real MATC "-0.5*tx"
+  AV {e} 2 = Variable Coordinate 1
+    Real MATC "0.5*tx"
+  AV = Real 0
+End

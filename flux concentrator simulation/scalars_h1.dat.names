@@ -1,0 +1,25 @@
+Metadata for SaveScalars file: ./scalars_h1.dat
+Elmer version: 26.1
+Elmer revision: Release
+Elmer compilation date: 2026-01-23
+Solver input file: case_h1.sif
+File started at: 2026/06/07 13:33:40
+ 
+Variables in columns of matrix: 
+   1: value: coordinate 1 at node 2694
+   2: value: coordinate 2 at node 2694
+   3: value: coordinate 3 at node 2694
+   4: value: magnetic flux density 1 at node 2694
+   5: value: magnetic flux density 2 at node 2694
+   6: value: magnetic flux density 3 at node 2694
+   7: value: magnetic field strength 1 at node 2694
+   8: value: magnetic field strength 2 at node 2694
+   9: value: magnetic field strength 3 at node 2694
+  10: value: magnetic flux density e 1 at node 2694
+  11: value: magnetic flux density e 2 at node 2694
+  12: value: magnetic flux density e 3 at node 2694
+  13: value: magnetic field strength e 1 at node 2694
+  14: value: magnetic field strength e 2 at node 2694
+  15: value: magnetic field strength e 3 at node 2694
+  16: res: eddy current power
+  17: res: electromagnetic field energy
