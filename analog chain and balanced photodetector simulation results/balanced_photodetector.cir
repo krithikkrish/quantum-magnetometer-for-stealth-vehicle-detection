@@ -1,0 +1,50 @@
+* ============================================================
+* Phase 1E/1F - Balanced photodetector + TIA + difference amp + gain
+* Single 3.3 V supply, mid-rail bias 1.65 V. Self-contained (built-in
+* ideal 1-pole op-amp macromodel) so NO external part library is needed.
+* Open in LTSpice: File -> Open -> this .cir -> press Run.
+* Then Add Traces: V(out), V(t1), V(t2).
+* ============================================================
+
+.param Rf=1Meg Cf=1p Idc=0.5u Iac=10n fsig=10k Gdiff=100
+
+* references
+Vref vref 0 1.65
+
+* ---- ideal 1-pole op-amp macromodel:  pins = in+  in-  out ----
+* DC gain 1e5, pole ~100 Hz  => gain-bandwidth ~10 MHz, low output impedance
+.subckt OPAMP inp inn out
+Eg  int 0 inp inn 1e5
+R1  int n1 1k
+C1  n1 0 1.59u
+Eb  out 0 n1 0 1
+.ends
+
+* ---- Channel 1: SIGNAL photodiode + transimpedance amp ----
+* photocurrent (DC background + AC signal) into the virtual-ground node a1
+I1 a1 0 SIN({Idc} {Iac} {fsig}) AC 1
+XU1 vref a1 t1 OPAMP
+Rf1 t1 a1 {Rf}
+Cf1 t1 a1 {Cf}
+
+* ---- Channel 2: REFERENCE photodiode + TIA (background only, no signal) ----
+I2 a2 0 {Idc}
+XU2 vref a2 t2 OPAMP
+Rf2 t2 a2 {Rf}
+Cf2 t2 a2 {Cf}
+
+* ---- Difference amplifier (subtractor), gain Gdiff, referenced to 1.65 V ----
+* Vout = Gdiff*(t2 - t1) + 1.65   ->  cancels the common-mode background,
+* amplifies only the difference (the magnetic signal).
+Rg1 t1 xn 1k
+Rfb xn out {1k*Gdiff}
+Rg3 t2 yp 1k
+Rr2 yp vref {1k*Gdiff}
+XU3 yp xn out OPAMP
+
+* ---- analyses ----
+;.op
+;.tran 0 2m 0 1u
+.ac dec 50 1 10Meg
+* .noise V(out) I1 dec 50 1 1Meg   ; uncomment for noise spectral density
+.end
